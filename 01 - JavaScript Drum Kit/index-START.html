@@ -58,7 +58,45 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function lightUpKey(keyCode) {
+    const keyElement = document.querySelector(`.key[data-key="${keyCode}"]`);
 
+    // light it up! (change the css!)
+    // how to change css of an HTML5 element?
+    keyElement.classList.add('playing');
+  }
+
+  function playAudio(keyCode) {
+    const audioElement = document.querySelector(`audio[data-key="${keyCode}"]`);
+
+    if (!audioElement) {
+      return;
+    }
+
+    // rewind to the start, audio.play() plays until the end and then repeats
+    audioElement.currentTime = 0;
+    audioElement.play();
+  }
+
+  const keys = document.querySelectorAll('.key');
+  // must add to each element
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
+  
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  window.addEventListener('keydown', function (e) {
+      // I tried to use a switch statement for all the letters.
+      // OO thinking: they all inherit from the 'key' object
+      // inheritance
+
+      // get the audio element
+      playAudio(e.keyCode);
+      lightUpKey(e.keyCode);
+
+    });
 </script>
 
 
