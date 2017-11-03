@@ -4,4 +4,4 @@
 * Playing Audio
 * Browser Event Listeners
 * key-codes (not standard)
-* How to add a class to a div
+* How to add a class to an element``
