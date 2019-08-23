@@ -8,7 +8,7 @@
 <body>
 
   <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
+    <input type="text" class="search" placeholder="City or State" autofocus>
     <ul class="suggestions">
       <li>Filter for a city</li>
       <li>or a state</li>
@@ -21,6 +21,7 @@ const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb
 // you can get that from an event listener
 
 let cities = [];
+let matches = [];
 // fetch when the page loads
 fetch(endpoint)
 .then(blob => blob.json())
@@ -40,11 +41,12 @@ searchInput.addEventListener('change', displayMatches);
  * Instead, I'm just getting the value
  */
 function displayMatches() {
-  const matches = getCities(this.value);
+  getCities(this.value);
   const suggestions = document.querySelector(".suggestions");
   // generate the new innerHTML
 
   // I realize that I need to use a regex because there can be multiple entries
+  
   const newEntries = matches.map(city => {
     const originalString = `${city.city}, ${city.state}`;
     const regex = new RegExp(this.value, 'gi');
@@ -55,6 +57,7 @@ function displayMatches() {
       <span class="population">${numberWithCommas(city.population)}</span>
     </li>`;
   });
+  // console.log(newEntries.join(''));
     suggestions.innerHTML = newEntries.join('');
 }
 
@@ -64,9 +67,10 @@ function displayMatches() {
  */
 function getCities(inputStr) {
   const regex = new RegExp(inputStr, 'gi');
-  return cities.filter(city => {
+    const filtered = cities.filter(city => {
     return city.city.match(regex) || city.state.match(regex);
   });
+  sortByLocation(filtered);
 }
 
 /** taken from stack overflow */
@@ -74,6 +78,44 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function sortByLocation(places) {
+  if (!navigator.geolocation) {
+    matches = places;
+  }
+
+  navigator.geolocation.getCurrentPosition(displayLocationInfo);
+
+  function displayLocationInfo(position) {
+    const lng = position.coords.longitude;
+    const lat = position.coords.latitude;
+
+    const distance = curryDistance(lat, lng);
+
+    matches = places.sort((a, b) => {
+      return distance(a.latitude, a.longitude) - distance(b.latitude, b.longitude);
+    });
+  }
+
+  function curryDistance(lat2, long2) {
+    /** taken from internet */
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      var radlat1 = Math.PI * lat1/180;
+      var radlat2 = Math.PI * lat2/180;
+      var radlon1 = Math.PI * lon1/180;
+      var radlon2 = Math.PI * lon2/180;
+      var theta = lon1-lon2;
+      var radtheta = Math.PI * theta/180;
+      var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      dist = Math.acos(dist)
+      dist = dist * 180/Math.PI;
+      dist = dist * 60 * 1.1515;
+      return dist * 1.609344;
+    }
+    return (lat1, long1) => {
+      return haversineDistance(lat1, long1, lat2, long2);
+    }
+  }
+}
 
 </script>
 </body>
