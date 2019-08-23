@@ -17,6 +17,64 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+// my initial attempt was just getting the value of the input
+// you can get that from an event listener
+
+let cities = [];
+// fetch when the page loads
+fetch(endpoint)
+.then(blob => blob.json())
+.then(data => {
+  cities = data;
+});
+
+// picks the first or null
+const searchInput = document.querySelector('.search');
+
+searchInput.addEventListener('keyup', displayMatches);
+searchInput.addEventListener('change', displayMatches);
+
+/**
+ * @param {Event} event handler event
+ * I don't actually use the args.
+ * Instead, I'm just getting the value
+ */
+function displayMatches() {
+  const matches = getCities(this.value);
+  const suggestions = document.querySelector(".suggestions");
+  // generate the new innerHTML
+
+  // I realize that I need to use a regex because there can be multiple entries
+  const newEntries = matches.map(city => {
+    const originalString = `${city.city}, ${city.state}`;
+    const regex = new RegExp(this.value, 'gi');
+    const highlightedString = originalString.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `
+    <li>
+      <span class="name">${highlightedString}</span>
+      <span class="population">${numberWithCommas(city.population)}</span>
+    </li>`;
+  });
+    suggestions.innerHTML = newEntries.join('');
+}
+
+/**
+ * I didn't think of using a Regex, I immediately went for toLowerCase()
+ * but it was a bit clunky
+ */
+function getCities(inputStr) {
+  const regex = new RegExp(inputStr, 'gi');
+  return cities.filter(city => {
+    return city.city.match(regex) || city.state.match(regex);
+  });
+}
+
+/** taken from stack overflow */
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
 </script>
 </body>
 </html>
