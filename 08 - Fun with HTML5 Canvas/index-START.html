@@ -7,6 +7,22 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  // the html elem
+  const canvas = document.getElementById("draw");
+  // full screen canvas
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // obj w/ methods & props to render graphics
+  const ctx = canvas.getContext("2d");
+  ctx.strokeStyle = "#BADA55";
+  ctx.lineJoin = "round"; // round, bevel, miter
+  ctx.lineCap = "round";  // butt, round, square
+ 
+
+  let isDrawing = false;
+
+
 </script>
 
 <style>
