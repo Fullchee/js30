@@ -83,16 +83,23 @@ function sortByLocation(places) {
     matches = places;
   }
 
-  navigator.geolocation.getCurrentPosition(displayLocationInfo);
+  navigator.geolocation.getCurrentPosition(getDistance);
 
-  function displayLocationInfo(position) {
+  function getDistance(position) {
     const lng = position.coords.longitude;
     const lat = position.coords.latitude;
+
+    if (!cities[0].distance) {
+      cities.forEach(city => {
+        const getDistance = curryDistance(lat, lng);
+        city.distance = getDistance(city.latitude, city.longitude);
+      });
+    }
 
     const distance = curryDistance(lat, lng);
 
     matches = places.sort((a, b) => {
-      return distance(a.latitude, a.longitude) - distance(b.latitude, b.longitude);
+      return a.distance - b.distance;
     });
   }
 
