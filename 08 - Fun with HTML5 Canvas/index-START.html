@@ -7,6 +7,80 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  // the html elem
+  const canvas = document.getElementById("draw");
+  // full screen canvas
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // obj w/ methods & props to render graphics
+  const ctx = canvas.getContext("2d");
+  ctx.strokeStyle = "#BADA55";
+  ctx.lineJoin = "round"; // round, bevel, miter
+  ctx.lineCap = "round";  // butt, round, square
+ 
+
+  let isDrawing = false;
+  // TODO: what should the default value be?
+  let lastX;
+  let lastY;
+  let hue = 0;
+  let lineWidth = 1;
+  let getThicker = true;
+
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", () => isDrawing = false);
+  canvas.addEventListener("mousedown", (e) => {
+    // wes' solution is way more elegant than my || in the draw()
+    isDrawing = true
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+
+  // handles the case where you hold the mouse, exit, then you let go outside
+  // this will cancel it
+  // the impossible quiz!
+  canvas.addEventListener("mouseout", () => isDrawing = false);
+
+  /**
+   * @param {MouseEvent}
+   */
+  function draw(e) {
+    if (!isDrawing) {
+      return;
+    }
+
+    // change colour after time
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    hue += 1;
+    if (hue - 360 >= 0) {
+      hue -= 360;
+    }
+
+    // shrink and grow after time
+    ctx.lineWidth = lineWidth;
+    lineWidth += getThicker ? 1 : -1;
+
+    // i had two if statements, Wes just toggled the bool flag
+    if (lineWidth >= 100 || lineWidth <= 1) {
+      getThicker = !getThicker;
+    }
+    
+
+    // draw
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    // layerX vs clientX vs x vs pageX (they're all the same if canvas takes up the whole screen)
+    // vs offsetX
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke(); // actually puts it on canvas
+    lastX = e.offsetX;
+    lastY = e.offsetY;
+
+
+
+  }
+
+
 </script>
 
 <style>
