@@ -96,6 +96,33 @@
   </div>
 
 <script>
+  const checkboxes = document.querySelectorAll(`input[type="checkbox"]`);
+  
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener("click", handleClick);
+  })
+
+  let lastChecked;
+  function handleClick(evt) {
+    // check if shift key is down (cool! I didn't know MouseEvents know about keyboard modifiers!)
+    // we only care if they check it
+    if (evt.shiftKey && this.checked) {
+      // I gave up without realizing that brute forcing it was the best way to go
+      let inBetween = false;
+      checkboxes.forEach(checkbox => {
+        if (checkbox === this || checkbox === lastChecked) {
+          inBetween = !inBetween; 
+        }
+        if (inBetween) {
+          checkbox.checked = true;
+        }
+      });
+      
+    }
+    
+    lastChecked = this;
+  }
+  
 </script>
 </body>
 </html>
