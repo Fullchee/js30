@@ -58,6 +58,31 @@
       };
     }
 
+    const sliderImages = document.querySelectorAll("img.slide-in");
+    
+    // add the class "active" when you scroll down
+    function transitionImage(e) {
+      sliderImages.forEach(sliderImage => {
+        // half way through the image, as if the image were exactly half shown at the bottom
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+        
+        // the absolute vertical location of the img 
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+      });
+    }
+
+    // WRONG: sliders don't have the scroll event!
+    // sliderImages.forEach(img => img.addEventListener("scroll", debounce(transitionImage)));
+    window.addEventListener("scroll", debounce(transitionImage))
+
   </script>
 
   <style>
