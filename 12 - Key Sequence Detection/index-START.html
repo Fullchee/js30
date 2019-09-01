@@ -7,6 +7,22 @@
 </head>
 <body>
 <script>
+
+  const konami = "fullchee";
+  let pressedKeys = Array(8).fill(null);
+
+  function handleKonami(e) {
+    pressedKeys.push(e.key);  // queue methods
+    pressedKeys.shift();
+    console.log(pressedKeys);
+
+    if (pressedKeys.join("").includes(konami)) {
+      cornify_add();
+    }
+  }
+
+  // if you hold a key, it will trigger keydown and keypress a bunch of times
+  window.addEventListener("keyup", handleKonami);
 </script>
 </body>
 </html>
