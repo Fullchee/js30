@@ -28,7 +28,51 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+  populateList(items, itemsList);
+
+  function addItem(e) {
+    e.preventDefault();
+    const text = this.querySelector("[name=item]").value;
+    
+    items.push({
+      text,
+      done: false // need to update checkbox
+    });
+    
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset(); // reset the form
+  }
+
+  function populateList(plates = [], plateList) {
+    plateList.innerHTML = plates.map((plate, i) => {
+      // TODO: why data-index?
+      return `
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}/>
+        <label for="item${i}">${plate.text}</label>
+      </li>
+        `
+    }).join('');
+  }
+
+  /**
+  Persist the checked state
+  */
+  function toggleDone(e) {
+    // Element.matches()
+    if (!e.target.matches('input')) return; // stop if not an input
+    const i = e.target.dataset.index;
+    items[i].done = !items[i].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemList);
+  }
+
+  addItems.addEventListener("submit", addItem);
+  itemsList.addEventListener("click", toggleDone);
+
+  // window.localStorage.setItem("")
 
 </script>
 
