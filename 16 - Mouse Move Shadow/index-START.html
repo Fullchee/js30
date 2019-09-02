@@ -35,6 +35,24 @@
   </style>
 
 <script>
+  const hero = document.querySelector(".hero");
+  const text = document.querySelector("h1");
+
+  function shadow(e) {
+    // const width = hero.offsetWidth;
+    // const height = hero.offsetHeight;
+
+    const { offsetWidth: width, offsetHeight: height } = hero;
+    let { offsetX: x, offsetY: y } = e;
+
+    // handle event delegation for nested (will reset)
+    if (this !== e.target) {
+      x += e.target.offsetLeft;
+      y += e.target.offsetTop;
+    }
+  }
+
+  hero.addEventListener("mousemove", shadow);
 </script>
 </body>
 </html>
