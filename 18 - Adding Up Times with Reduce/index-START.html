@@ -182,11 +182,11 @@
     </li>
   </ul>
 <script>
-const times = Array.from(document.querySelectorAll("[data-time]")).map(li => li.dataset.time);
-const totalSeconds = times.reduce((acc, curr) => {
-  const [mins, seconds] = curr.split(":");
-  return acc + parseInt(mins) * 60 + parseInt(seconds);
-}, 0);
+const totalSeconds = Array.from(document.querySelectorAll("[data-time]"))
+  .reduce((acc, curr) => {
+    const [mins, seconds] = curr.dataset.time.split(":");
+    return acc + parseInt(mins) * 60 + parseInt(seconds);
+  }, 0);
 
 function formatTime(totalSeconds) {
   const seconds = totalSeconds % 60;
