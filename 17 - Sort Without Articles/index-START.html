@@ -55,16 +55,20 @@ const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'N
   * @returns {string} - band name with prefix article removed
   */
 function removeArticle(band) {
-  if (band.slice(0, 4) === "The ") {
-    return band.slice(4);
-  }
-  else if (band.slice(0, 3) === "An ") {
-    return band.slice(3);
-  }
-  else if (band.slice(0, 2) === "A ") {
-    return band.slice(2);
-  }
-  return band;
+  // if (band.slice(0, 4) === "The ") {
+  //   return band.slice(4);
+  // }
+  // else if (band.slice(0, 3) === "An ") {
+  //   return band.slice(3);
+  // }
+  // else if (band.slice(0, 2) === "A ") {
+  //   return band.slice(2);
+  // }
+  // return band;
+
+  // wes' solution is so much nicer
+  return bandName.replace(/^(a |the |an )/i, '').trim();
+
 }
 
 bands.sort((a, b) => {
