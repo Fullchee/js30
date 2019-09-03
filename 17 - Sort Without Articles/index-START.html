@@ -48,6 +48,35 @@
 <script>
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
 
+// sort without An, A, The
+
+/**
+  * @param {string} band
+  * @returns {string} - band name with prefix article removed
+  */
+function removeArticle(band) {
+  if (band.slice(0, 4) === "The ") {
+    return band.slice(4);
+  }
+  else if (band.slice(0, 3) === "An ") {
+    return band.slice(3);
+  }
+  else if (band.slice(0, 2) === "A ") {
+    return band.slice(2);
+  }
+  return band;
+}
+
+bands.sort((a, b) => {
+  return removeArticle(a) > removeArticle(b) ? 1 : -1;
+});
+
+const unorderedList = document.querySelector("#bands");
+unorderedList.innerHTML = bands.map((band, i) => {
+  return `
+    <li id=item${i}>${band}</li>
+  `
+}).join('');
 
 </script>
 
