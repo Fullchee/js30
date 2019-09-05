@@ -43,18 +43,21 @@
   </div>
 
   <script>
-    function debounce(func, wait = 20, immediate = true) {
-      var timeout;
+    function debounce(func, wait = 20) {
+      let timeout;
       return function() {
-        var context = this, args = arguments;
-        var later = function() {
+        const later = function() {
           timeout = null;
-          if (!immediate) func.apply(context, args);
         };
-        var callNow = immediate && !timeout;
+
+        // time's up => call it!
+        const callNow = !timeout;
+        if (callNow) func.apply(this, arguments);
+        
+        // reset the previous timer
+        // scrolling faster than 20ms => won't actually run func
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
       };
     }
 
