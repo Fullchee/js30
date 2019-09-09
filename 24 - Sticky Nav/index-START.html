@@ -54,7 +54,14 @@
   </div>
 
 <script>
+const nav = document.querySelector("nav");
 
+const topOfNav = nav.offsetTop;
+
+
+
+// this should be throttled
+window.addEventListener('scroll', fixNav);
 </script>
 
 </body>
