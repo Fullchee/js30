@@ -59,6 +59,21 @@ const nav = document.querySelector("nav");
 const topOfNav = nav.offsetTop;
 
 
+function fixNav() {
+  if (window.scrollY >= topOfNav) {
+    // nav.offsetHeight = height of the nav
+    // there is no height attribute
+    // set the paddingTop to the height, so that scrolling down is smooth
+    // position: absolute => not in document => hard transition
+    document.body.style.paddingTop = nav.offsetHeight + 'px';
+    document.body.classList.add('fixed-nav');
+  }
+  else {
+    document.body.classList.remove('fixed-nav');
+    // don't need this anymore, will create random white at the top
+    document.body.style.paddingTop = 0;
+  }
+}
 
 // this should be throttled
 window.addEventListener('scroll', fixNav);
