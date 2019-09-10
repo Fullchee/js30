@@ -12,6 +12,37 @@
 <script>
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+  const recognition = new SpeechRecognition();
+
+  // start getting results right away
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+
+  const words = document.querySelector('.words');
+  let p = document.createElement('p');
+  words.appendChild(p);
+
+  recognition.addEventListener('result', (e) => {
+    // super nested structure
+    const transcript = Array.from(e.results)
+    .map(result => result[0])
+    .map(result => result.transcript)
+    .join('');
+
+    // add it to the existing p tag as you talk
+    p.textContent = transcript;
+
+    if (e.results[0].isFinal) {
+      // start adding to a new p tag
+      p = document.createElement('p');
+      words.appendChild(p);
+    }
+  });
+
+  // once it's finished, it unbinds itself, we ask for the webcam again
+  recognition.addEventListener('end', recognition.start());
+
+  recognition.start();
 
 </script>
 
