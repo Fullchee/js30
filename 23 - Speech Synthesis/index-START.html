@@ -35,6 +35,47 @@
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+
+  // woah, you can assign a property to match a document like this!
+  msg.text = document.querySelector('[name="text"]').value;
+
+  function populateVoices() {
+    voices = this.getVoices();
+    voicesDropdown.innerHTML = voices
+      .filter(voice => voice.lang.includes('en'))
+      .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+      .join('');
+  }
+
+  // global variable
+  // only gets triggered in Chrome when online,
+  // linux doesn't come with speech synthesis
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+
+
+  function setVoice() {
+    console.log(msg.voice);
+    msg.voice = voices.find(voice => voice.name === this.value);
+    restartSpeech();
+  }
+
+  function restartSpeech(startOver = true) {
+    speechSynthesis.cancel();  // cancel the already going-on speech synthesis
+    if (startOver) {
+      speechSynthesis.speak(msg);  // with the new voice
+    }
+  }
+
+  voicesDropdown.addEventListener('change', setVoice);
+  speakButton.addEventListener('click', restartSpeech);
+  stopButton.addEventListener('click', () => restartSpeech(false));
+
+
+  function setOption() {
+    msg[this.name] = this.value;  // hack, Wes' already set the name as the property
+    restartSpeech();
+  }
+  options.forEach(option => option.addEventListener('change', setOption));
 </script>
 
 </body>
