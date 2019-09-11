@@ -142,6 +142,8 @@
     display: none;
   }
 
+  /* CSS: can't transition from both opacity 0 -> 1 and display none -> block */
+  /* This is how transitions work in front-end frameworks (React, Angular, Vue) */
   .trigger-enter .dropdown {
     display: block;
   }
@@ -220,6 +222,46 @@
 </style>
 
 <script>
+  const triggers = document.querySelectorAll('.cool > li');
+  
+  // the white "background" that will move around
+  const background = document.querySelector(".dropdownBackground");
+  const nav = document.querySelector(".top")
+
+  function createBackground() {
+    this.classList.add('trigger-enter');
+    // need to use arrow function, has parent's scope
+    // the conditional is to prevent items from prematurely appearing
+    setTimeout(() => this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'), 100);
+    
+    background.classList.add('open');
+
+    const dropdown = this.querySelector('.dropdown');
+    // background dimensions
+    const dropdownCoords = dropdown.getBoundingClientRect();
+    const navCoords = nav.getBoundingClientRect();
+    // background.style.position = `translate()`;
+    const coords = {
+      height: dropdownCoords.height,
+      width: dropdownCoords.width,
+      left: dropdownCoords.left - navCoords.left,
+      top: dropdownCoords.top - navCoords.top
+    };
+
+    background.style.setProperty('height', `${coords.height}px`);
+    background.style.setProperty('width', `${coords.width}px`);
+    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`);
+    console.log(coords);
+  }
+
+  function rmBackground() {
+    // remove everything in 1 shot
+    this.classList.remove('trigger-enter', 'trigger-enter-active');
+    background.classList.remove('open');
+  }
+
+  triggers.forEach(trigger => trigger.addEventListener('mouseenter', createBackground));
+  triggers.forEach(trigger => trigger.addEventListener('mouseleave', rmBackground));
 </script>
 
 </body>
