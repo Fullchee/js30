@@ -53,6 +53,7 @@ body {
   font-size: 80px;
   font-weight: 100;
   color: rgba(0,0,0,0.15);
+  /* box shadow all ways, inset makes it on the inside of the div */
   box-shadow: inset 0 0 0 10px rgba(0,0,0,0.15);
 }
 

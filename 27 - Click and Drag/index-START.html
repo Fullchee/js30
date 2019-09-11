@@ -35,6 +35,39 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');  // zoom in, change the cursor
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+
+  });
+
+  function mouseStop() {
+    isDown = false;
+    slider.classList.remove('active');
+  }
+
+  slider.addEventListener('mouseleave', mouseStop);
+
+  slider.addEventListener('mouseup', mouseStop);
+
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 3;  // get the slider to move a bit more
+
+    // without the scrollLeft -, it's jumpy, this makes sure it doesn't recalculate it every millisecond
+    slider.scrollLeft = scrollLeft - walk;
+
+  });
 </script>
 
   </body>

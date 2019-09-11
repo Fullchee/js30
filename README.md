@@ -7,3 +7,4 @@
 * How to add a class to an element``
 
 26: How did he get the menu items below the nav?
+27: TODO: how do people do mouse acceleration?
